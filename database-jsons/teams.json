@@ -1,0 +1,146 @@
+[
+    {
+        "id": 1,
+        "teamName": "Innovators",
+        "totalRevenue": 1500,
+        "product": {
+            "id": 1,
+            "name": "Eco-friendly Water Bottle",
+            "imageUrl": "https://example.com/images/water_bottle.jpg",
+            "description": "A reusable water bottle made from biodegradable materials. Keeps liquids cold for up to 12 hours.",
+            "rating": 4.5
+        }
+    },
+    {
+        "id": 2,
+        "teamName": "Techies",
+        "totalRevenue": 1300,
+        "product": {
+            "id": 2,
+            "name": "Portable Phone Stand",
+            "imageUrl": "https://example.com/images/phone_stand.jpg",
+            "description": "A foldable, lightweight phone stand perfect for on-the-go. Adjustable angles for optimal viewing.",
+            "rating": 4.2
+        }
+    },
+    {
+        "id": 3,
+        "teamName": "Creative Minds",
+        "totalRevenue": 1750,
+        "product": {
+            "id": 3,
+            "name": "Custom Art Posters",
+            "imageUrl": "https://example.com/images/art_poster.jpg",
+            "description": "High-quality art posters featuring unique and customizable designs.",
+            "rating": 4.8
+        }
+    },
+    {
+        "id": 4,
+        "teamName": "Craft Masters",
+        "totalRevenue": 1200,
+        "product": {
+            "id": 4,
+            "name": "Handmade Soap Bars",
+            "imageUrl": "https://example.com/images/soap.jpg",
+            "description": "Natural, handmade soap bars available in a variety of scents and shapes.",
+            "rating": 4.4
+        }
+    },
+    {
+        "id": 5,
+        "teamName": "Green Warriors",
+        "totalRevenue": 1600,
+        "product": {
+            "id": 5,
+            "name": "Plantable Pencils",
+            "imageUrl": "https://example.com/images/pencil.jpg",
+            "description": "Eco-friendly pencils that can be planted to grow herbs and flowers once used.",
+            "rating": 4.7
+        }
+    },
+    {
+        "id": 6,
+        "teamName": "Bright Sparks",
+        "totalRevenue": 1400,
+        "product": {
+            "id": 6,
+            "name": "LED Desk Lamps",
+            "imageUrl": "https://example.com/images/lamp.jpg",
+            "description": "Compact, energy-saving LED desk lamps with adjustable brightness levels.",
+            "rating": 4.3
+        }
+    },
+    {
+        "id": 7,
+        "teamName": "Innovate",
+        "totalRevenue": 1100,
+        "product": {
+            "id": 7,
+            "name": "Sustainable Tote Bags",
+            "imageUrl": "https://example.com/images/tote_bag.jpg",
+            "description": "Stylish and durable tote bags made from recycled materials.",
+            "rating": 4.1
+        }
+    },
+    {
+        "id": 8,
+        "teamName": "Pioneers",
+        "totalRevenue": 1250,
+        "product": {
+            "id": 8,
+            "name": "Solar-Powered Phone Charger",
+            "imageUrl": "https://example.com/images/solar_charger.jpg",
+            "description": "Compact and portable solar-powered phone chargers, perfect for outdoor use.",
+            "rating": 4.6
+        }
+    },
+    {
+        "id": 9,
+        "teamName": "Think Tank",
+        "totalRevenue": 1550,
+        "product": {
+            "id": 9,
+            "name": "DIY Craft Kits",
+            "imageUrl": "https://example.com/images/craft_kit.jpg",
+            "description": "All-in-one DIY craft kits for making personalized gifts or decorations.",
+            "rating": 4.5
+        }
+    },
+    {
+        "id": 10,
+        "teamName": "Trendsetters",
+        "totalRevenue": 1350,
+        "product": {
+            "id": 10,
+            "name": "Fashionable Face Masks",
+            "imageUrl": "https://example.com/images/face_mask.jpg",
+            "description": "Reusable, trendy face masks with a variety of customizable designs.",
+            "rating": 4.2
+        }
+    },
+    {
+        "id": 11,
+        "teamName": "Creators",
+        "totalRevenue": 1450,
+        "product": {
+            "id": 11,
+            "name": "3D-Printed Keychains",
+            "imageUrl": "https://example.com/images/keychain.jpg",
+            "description": "Customizable 3D-printed keychains in various shapes and colors.",
+            "rating": 4.4
+        }
+    },
+    {
+        "id": 12,
+        "teamName": "Visionaries",
+        "totalRevenue": 1700,
+        "product": {
+            "id": 12,
+            "name": "Smart Home Plugs",
+            "imageUrl": "https://example.com/images/smart_plug.jpg",
+            "description": "Smart plugs that can be controlled via phone app, making it easy to manage electronics remotely.",
+            "rating": 4.7
+        }
+    }
+]

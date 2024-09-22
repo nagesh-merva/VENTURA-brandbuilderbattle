@@ -1,0 +1,26 @@
+[
+    {
+        "id": "buyer1",
+        "name": "Alice Johnson",
+        "tokens": 1000,
+        "cart": []
+    },
+    {
+        "id": "buyer2",
+        "name": "Bob Smith",
+        "tokens": 500,
+        "cart": []
+    },
+    {
+        "id": "buyer3",
+        "name": "Charlie Brown",
+        "tokens": 1500,
+        "cart": []
+    },
+    {
+        "id": "buyer4",
+        "name": "Daisy White",
+        "tokens": 200,
+        "cart": []
+    }
+]
