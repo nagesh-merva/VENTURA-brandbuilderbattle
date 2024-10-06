@@ -27,7 +27,7 @@ const ProductDetail = () => {
 
     useEffect(() => {
         setLoading(true)
-        const url = `http://127.0.0.1:5000/api/product/${productId}`
+        const url = `https://ventura-brandbuilderbattle.onrender.com/api/product/${productId}`
         const fetchProduct = async () => {
             try {
                 const response = await fetch(url, {
@@ -62,7 +62,7 @@ const ProductDetail = () => {
             return;
         }
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/buy', {
+            const response = await fetch('https://ventura-brandbuilderbattle.onrender.com/api/buy', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ productId, price, pin, name }),
@@ -87,7 +87,14 @@ const ProductDetail = () => {
         return <TransactionSuccess onComplete={handleCompleteTransaction} />
     }
 
-    if (!product || loading) return <p className="text-center text-lg">Loading...</p>
+    if (!product || loading) {
+        return (
+            <div className="flex justify-center items-center h-svh w-full">
+                <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+                <p className="ml-4 text-lg font-semibold text-gray-600">Loading Product...</p>
+            </div>
+        )
+    }
 
     return (
         <div className="max-w-md mx-auto p-4 border rounded-lg shadow-lg">

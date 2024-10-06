@@ -12,7 +12,7 @@ const TeamList = () => {
     const fetchTeams = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/teams', {
+            const response = await fetch('https://ventura-brandbuilderbattle.onrender.com/api/teams', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
