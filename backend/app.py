@@ -1,9 +1,9 @@
+import os
 from flask import Flask, request, jsonify
-from bson import ObjectId
 from flask_cors import CORS
 from pymongo import MongoClient
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='../frontend/dist', static_url_path='/')
 CORS(app, supports_credentials=True, allow_headers="*", origins="*", methods=["OPTIONS", "POST","GET"])
 CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
@@ -11,10 +11,10 @@ client = MongoClient('mongodb+srv://nagesh:nagesh2245@mywebsites.btvk61i.mongodb
 db = client['Ventura']
 teams_collection = db['teams']
 buyers_collection = db['buyers']
-
+        
 @app.route('/api/teams', methods=['GET'])
 def get_teams():
-    teams_data = teams_collection.find() 
+    teams_data = teams_collection.find()
 
     teams = []
     for team in teams_data:
@@ -22,6 +22,25 @@ def get_teams():
         teams.append(team)
 
     return jsonify({'status': 'success', 'teams': teams}), 200
+
+@app.route('/api/login', methods=['POST'])
+def login_buyer():
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'success', 'message': 'CORS preflight request handled successfully'}), 200
+    
+    data = request.json
+    buyer_name = data['name'].lower()
+    pin = data['pin']
+
+    buyer = buyers_collection.find_one({"name": buyer_name})
+    
+    if buyer is None:
+        return jsonify({"error": "Buyer not found"}), 404
+    
+    if buyer['pin'] == pin:
+        return jsonify({"status": "success", "message": "Login successful"}), 200
+    
+    return jsonify({"error": "Invalid PIN"}), 400
 
 @app.route('/api/product/<product_id>', methods=['GET'])
 def get_product(product_id):
@@ -38,7 +57,7 @@ def buy_product():
         return jsonify({'status': 'success', 'message': 'CORS preflight request handled successfully'}), 200
     
     data = request.json
-    buyer_name = data['name']
+    buyer_name = data['name'].lower()
     price = float(data['price'])
     product_id = data['productId']
     pin = data['pin']
@@ -47,33 +66,35 @@ def buy_product():
     if not product:
         return jsonify({"error": "Product not found"}), 404
     
-    product_details = product['product']  # Get only the product object
+    product_details = product['product'] 
 
     buyer = buyers_collection.find_one({"name": buyer_name})
     if buyer['tokens'] < price:
-        return jsonify({"error": "Not enough tokens"}), 400
+        return jsonify({"message": "Not enough tokens"}), 400
     
-    if buyer['pin'] == pin:
-        # Update buyer's cart and token balance
-        buyers_collection.update_one(
+    if buyer['pin'] != pin:
+        return jsonify({"message": "incorrect PIN"}), 400
+
+    if product_details in buyer.get('cart', []):
+        return jsonify({"message": "Product already present in the cart"}), 400
+
+    buyers_collection.update_one(
         {"name": buyer_name},
         {"$push": {"cart": product_details}, "$inc": {"tokens": -price}}
-        )
-        return jsonify({"message": "Product added to cart"}), 200
+    )
+    return jsonify({"message": "Product added to cart"}), 200
 
-    return jsonify({"message": "incorrect PIN"}), 400
-
-@app.route('/api/cart', methods=['GET'])
+@app.route('/api/cart', methods=['POST'])
 def get_cart():
-    buyer_id = "buyer1"  # Assume buyer is logged in
-    buyer = buyers_collection.find_one({"id": buyer_id})
+    data = request.json
+    buyer_name = data['buyername'].lower()
+    buyer = buyers_collection.find_one({"name": buyer_name})
     
     if buyer is None:
         return jsonify({"error": "Buyer not found"}), 404
 
     cart_products = buyer.get('cart', [])
     
-    # Structure the response with product details and total tokens
     return jsonify({"items": cart_products, "total": buyer['tokens']}), 200
 
 
