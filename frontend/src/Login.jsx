@@ -6,7 +6,8 @@ const Login = () => {
     const [pin, setPin] = useState('')
     const [error, setError] = useState(null)
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const textRef = useRef(null);
+    const textRef = useRef(null)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const svg = textRef.current;
@@ -41,8 +42,10 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        setLoading(true)
         try {
-            const response = await fetch('https://ventura-brandbuilderbattle.onrender.com/api/login', {
+            const response = await fetch('http://127.0.0.1:5000/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, pin }),
@@ -57,6 +60,8 @@ const Login = () => {
             }
         } catch (error) {
             setError('Error logging in. Please try again.')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -98,56 +103,66 @@ const Login = () => {
 
     return (
         <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-blue-900 via-black to-blue-900 animate-flow">
-            <div className="relative px-4 md:px-0 pt-4 w-full group flex flex-col justify-center items-center">
-                <svg
-                    ref={textRef}
-                    viewBox="0 0 150 20"
-                    className="h-24 w-full text-center"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.1"
-                >
-                    <text x="75" y="15" textAnchor="middle" className="text-stone-300 font-poppins font-extrabold text-lg">
-                        <tspan className="stroke-dasharray">VENTURA</tspan>
-                    </text>
-                </svg>
-                <p className='text-md font-sans text-stone-300 text-center pb-4 '>Brought to you by ECELL GEC in Collaboration with Vibrant Goa</p>
-            </div>
-            <div className="mx-4 p-5 w-4/5 bg-white bg-opacity-10 backdrop-blur-lg rounded-lg shadow-lg border border-opacity-20 border-white">
-                <h2 className="text-2xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500 stroke-white stroke-1 mb-2">Brand Builder Battle</h2>
-                <h3 className="text-xl font-semibold text-center text-gray-100 mb-6">Login</h3>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-6">
-                        <label className="block text-gray-100 font-semibold mb-2">Name:</label>
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="w-full p-3 bg-white bg-opacity-20 rounded-lg text-white placeholder-gray-300 border border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
-                            placeholder="Enter your name"
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <label className="block text-gray-100 font-semibold mb-2">PIN:</label>
-                        <input
-                            type="password"
-                            value={pin}
-                            onChange={(e) => setPin(e.target.value)}
-                            className="w-full p-3 bg-white bg-opacity-20 rounded-lg text-white placeholder-gray-300 border border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
-                            placeholder="Enter your PIN"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold rounded-lg hover:bg-gradient-to-l hover:from-orange-500 hover:to-yellow-500 transition duration-300"
-                    >
-                        Login
-                    </button>
-                    {error && (
-                        <div className="text-red-500 text-sm text-center mt-4">{error}</div>
-                    )}
-                </form>
-            </div>
+            {
+                loading ? (
+                    <div className="flex justify-center items-center h-64" >
+                        <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+                        <p className="ml-4 text-lg font-semibold text-gray-600">Loading ...</p>
+                    </div >
+                ) : (
+                    <>
+                        <div className="relative px-4 md:px-0 pt-4 w-full group flex flex-col justify-center items-center">
+                            <svg
+                                ref={textRef}
+                                viewBox="0 0 150 20"
+                                className="h-24 w-full text-center"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="0.1"
+                            >
+                                <text x="75" y="15" textAnchor="middle" className="text-stone-300 font-poppins font-extrabold text-lg">
+                                    <tspan className="stroke-dasharray">VENTURA</tspan>
+                                </text>
+                            </svg>
+                            <p className='text-md font-sans text-stone-300 text-center pb-4 '>Brought to you by ECELL GEC in Collaboration with Vibrant Goa</p>
+                        </div>
+                        <div className="mx-4 p-5 w-4/5 bg-white bg-opacity-10 backdrop-blur-lg rounded-lg shadow-lg border border-opacity-20 border-white">
+                            <h2 className="text-2xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500 stroke-white stroke-1 mb-2">Brand Builder Battle</h2>
+                            <h3 className="text-xl font-semibold text-center text-gray-100 mb-6">Login</h3>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-6">
+                                    <label className="block text-gray-100 font-semibold mb-2">Name:</label>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        className="w-full p-3 bg-white bg-opacity-20 rounded-lg text-white placeholder-gray-300 border border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
+                                        placeholder="Enter your name"
+                                    />
+                                </div>
+                                <div className="mb-6">
+                                    <label className="block text-gray-100 font-semibold mb-2">PIN:</label>
+                                    <input
+                                        type="password"
+                                        value={pin}
+                                        onChange={(e) => setPin(e.target.value)}
+                                        className="w-full p-3 bg-white bg-opacity-20 rounded-lg text-white placeholder-gray-300 border border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
+                                        placeholder="Enter your PIN"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="w-full py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold rounded-lg hover:bg-gradient-to-l hover:from-orange-500 hover:to-yellow-500 transition duration-300"
+                                >
+                                    Login
+                                </button>
+                                {error && (
+                                    <div className="text-red-500 text-sm text-center mt-4">{error}</div>
+                                )}
+                            </form>
+                        </div>
+                    </>
+                )}
         </div>
     )
 }

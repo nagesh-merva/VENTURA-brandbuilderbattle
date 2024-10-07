@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="./static/ecell.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <title>Add Buyer | Brand Builder Battle</title>
+</head>
+
+<body>
+    <header>BRAND BUILDER BATTLE</header>
+    <h1>Add a Buyer</h1>
+    <div class="form-container">
+        <form id="buyerForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter name" required>
+
+            <label for="pin">PIN:</label>
+            <input type="password" id="pin" placeholder="Enter 4-digit PIN" maxlength="4" required>
+
+            <button type="submit">Add Buyer</button>
+        </form>
+    </div>
+
+    <div class="buyer-container" id="buyerDetails">
+        <h2>Current Buyer Details</h2>
+        <div id="buyerInfo"></div>
+        {% if buyers %}
+            {% for buyer in buyers %}
+                <div class="buyer-item">
+                    <h2>Buyer Name: {{ buyer.name }}</h2>
+                    <p><strong>ID:</strong> {{ buyer.id }}</p>
+                    <p><strong>PIN:</strong> {{ buyer.pin }}</p>
+                    <p><strong>Tokens Left:</strong> {{ buyer.tokens }}</p>
+                    <h3>Cart:</h3>
+                    <ul>
+                    {% if buyer.cart %}
+                        {% for item in buyer.cart %}
+                            <li>
+                                <img src="{{ item.product.imageUrl }}" alt="{{ item.product.name }}" style="width: 50px; height: auto;">
+                                {{ item.product.name }} (Rating: {{ item.product.rating }}, Price Paid: {{ item.price_paid }})
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No items in cart</li>
+                    {% endif %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No buyers found.</p>
+        {% endif %}
+    </div>
+
+    <div class="top-buyers-container" id="topBuyers">
+        <h2>Top Buyers</h2>
+        <ul id="topBuyersList"></ul>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let buyers = []
+            fetch('/api/getbuyers', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    buyers = data.buyers
+                    console.log(buyers)
+                    const topBuyers = computeTopBuyers(buyers)
+                    displayTopBuyers(topBuyers)
+                } else {
+                    alert('Error: ' + data.message)
+                }
+            })
+            .catch(error => alert('CATCH Error: ' + error))
+        })
+
+        
+
+        document.getElementById('buyerForm').addEventListener('submit', function (e) {
+            e.preventDefault()
+            const name = document.getElementById('name').value
+            const pin = document.getElementById('pin').value
+
+            const newBuyer = {
+                name: name.toLowerCase(),
+                pin: pin,
+                tokens: 200,
+                cart: [],
+                id: 'buyer' + Math.floor(Math.random() * 1000)
+            }
+            fetch('/api/add-buyer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newBuyer)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayBuyerDetails(data.buyer)
+                } else {
+                    alert('Error: ' + data.message)
+                }
+            })
+            .catch(error => alert('CATCH Error: ' + error))
+        })
+
+        function displayBuyerDetails(buyer) {
+            const buyerInfo = `
+                <p><strong>ID:</strong> ${buyer.id}</p>
+                <p><strong>Name:</strong> ${buyer.name}</p>
+                <p><strong>Tokens:</strong> ${buyer.tokens}</p>
+                <h3>Cart:</h3>
+                <ul>
+                    ${buyer.cart.length > 0 ? buyer.cart.map(item => `<li>${item.product.name}</li>`).join('') : '<li>No items in cart</li>'}
+                </ul>
+            `
+            document.getElementById('buyerInfo').innerHTML = buyerInfo
+        }
+
+        function computeTopBuyers(buyers) {
+            const rankedBuyers = buyers.map(buyer => {
+                const ratingSum = buyer.cart.reduce((sum, item) => {
+                    return sum + (0.7*(item.product.rating / item.price_paid))
+                }, 0)
+                const ratingBalance = (0.3*(buyer.tokens/200))
+                const totalRanking = ratingSum + ratingBalance
+                return { name: buyer.name, id: buyer.id, ranking: totalRanking }
+            })
+
+            rankedBuyers.sort((a, b) => b.ranking - a.ranking)
+            console.log(rankedBuyers)
+            return rankedBuyers
+        }
+
+        function displayTopBuyers(topBuyers) {
+            const topBuyersList = document.getElementById('topBuyersList')
+            let rank = 1
+            topBuyersList.innerHTML = ''
+
+            if (topBuyers.length > 0) {
+                topBuyers.forEach(buyer => {
+                    const li = document.createElement('li')
+                    li.textContent = `${rank}   |---- ${buyer.name} --> POINTS: ${buyer.ranking.toFixed(2)}`
+                    topBuyersList.appendChild(li)
+                    rank++
+                })
+            } else {
+                topBuyersList.innerHTML = '<li>No top buyers found.</li>'
+            }
+        }
+
+    </script>
+</body>
+
+</html>
