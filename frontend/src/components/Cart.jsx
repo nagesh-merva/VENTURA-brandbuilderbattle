@@ -9,7 +9,7 @@ const Cart = () => {
         const fetchCart = async () => {
             const storedName = localStorage.getItem('buyerName')
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/cart', {
+                const response = await fetch('https://ventura-brandbuilderbattle.onrender.com/api/cart', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
