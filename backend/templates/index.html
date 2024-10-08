@@ -134,7 +134,7 @@
                     return sum + (0.7*(item.product.rating / item.price_paid))
                 }, 0)
                 const ratingBalance = (0.3*(buyer.tokens/200))
-                const totalRanking = ratingSum + ratingBalance
+                const totalRanking = (ratingSum + ratingBalance)*ratingSum*1000
                 return { name: buyer.name, id: buyer.id, ranking: totalRanking }
             })
 
