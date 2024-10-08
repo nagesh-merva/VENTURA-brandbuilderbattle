@@ -31,7 +31,7 @@ function Footer() {
                     <div className="flex flex-wrap justify-center space-x-4">
                         <img src="/vibrantgoa.png" alt="Sponsor 1" className="w-24 h-24 object-contain mb-4" />
                         <img src="/gec.png" alt="Sponsor 2" className="w-24 h-24 object-contain mb-4" />
-                        <img src="/ecell.png" alt="Sponsor 3" className="w-24 h-24 object-contain mb-4" />
+                        <img src="/ecell.jpg" alt="Sponsor 3" className="w-24 h-24 object-contain mb-4" />
                     </div>
                 </div>
                 <div className="w-full h-64">
