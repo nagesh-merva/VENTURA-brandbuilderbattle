@@ -7,6 +7,7 @@ const Cart = () => {
 
     useEffect(() => {
         const fetchCart = async () => {
+            setLoading(true)
             const storedName = localStorage.getItem('buyerName')
             try {
                 const response = await fetch('https://ventura-brandbuilderbattle.onrender.com/api/cart', {
