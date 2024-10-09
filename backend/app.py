@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -36,16 +37,18 @@ def add_buyer():
         return jsonify({"success": False, "message": "Buyer already exists"}), 400
 
     new_buyer = {
+        "_id": ObjectId(),
         "id": "buyer" + str(random.randint(1, 1000)),
         "name": data['name'],
         "tokens": 200,
         "cart": [],
         "pin": data['pin']
     }
+    new_buyer["_id"] = str(new_buyer["_id"])
 
     buyers_collection.insert_one(new_buyer)
 
-    return jsonify({"success": True, "buyer": new_buyer}), 200
+    return jsonify({"success": True,'status': 'success', "buyer": new_buyer}), 200
         
 @app.route('/api/teams', methods=['GET'])
 def get_teams():
