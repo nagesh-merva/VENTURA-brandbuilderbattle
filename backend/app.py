@@ -40,7 +40,7 @@ def add_buyer():
         "_id": ObjectId(),
         "id": "buyer" + str(random.randint(1, 1000)),
         "name": data['name'],
-        "tokens": 200,
+        "tokens": 150,
         "cart": [],
         "pin": data['pin']
     }
