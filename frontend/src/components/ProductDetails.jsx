@@ -73,7 +73,7 @@ const ProductDetail = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ productId, price, pin, name }),
-            });
+            })
             if (response.ok) {
                 setTransactionSuccess(true)
             } else {
