@@ -71,7 +71,7 @@ Welcome to **VENTURA Brand Builder Battle**, a dynamic platform designed for com
     Here's what the platform looks like! 
 
 
-🤝 Contributing
+🤝 Contributing:
     Fork the repository 📂
     Create a new branch: git checkout -b feature-xyz 🌿
     Commit your changes: git commit -m 'Add new feature' 💡
