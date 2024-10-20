@@ -49,7 +49,7 @@ Welcome to **VENTURA Brand Builder Battle**, a dynamic platform designed for com
 -    Create a new web service on Render.
 -    Link it to the backend repository.
 -    Specify the start command: python app.py.
-🗄️ Database Configuration
+# 🗄️ Database Configuration
 -    Use MongoDB: Create a MongoDB cluster or deploy it on Render.
 -    Set the connection string in the backend environment variables.
 
@@ -58,13 +58,13 @@ Welcome to **VENTURA Brand Builder Battle**, a dynamic platform designed for com
     -    Register and add your products 🏷️
     -    give specific QR codes for all buyers by accessing the /teamlist route and creating a QR of the link
 
--    Buyers: 
+- Buyers: 
     -    create a QR code of the frontend hosted link, ask buyers to scan.
     -    provide them credentials to login as entered in the backend from add buyers option.
     -    they get 150 coins to buy from the teams.
     -    buyers can now scan a teams QR to see the product and buy it and purchase items using tokens and pin provided 💳.
 
--    Admins: 
+- Admins: 
     -    Track sales, monitor team and Buyers standings, and declare winners 🏅.
 
     📸 Screenshots
