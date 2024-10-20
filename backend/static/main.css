@@ -74,6 +74,22 @@ button:hover {
     background-color: #004080;
 }
 
+.team-item {
+    background-color: white;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #7a7878;
+}
+
+.team-item img {
+    width: 60svw;
+}
+
+.team-item input[type="number"] {
+    width: 80px;
+    margin-right: 5px;
+}
+
 .buyer-container {
     max-width: 800px;
     margin: 20px auto;

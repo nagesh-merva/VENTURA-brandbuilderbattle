@@ -11,8 +11,33 @@
 
 <body>
     <header>BRAND BUILDER BATTLE</header>
+    <h1>Add a Team</h1>
+    <div class="form-container">
+        <form id="teamForm">
+            <label for="teamName">Team Name:</label>
+            <input type="text" id="teamName" placeholder="Enter team name" required>
+
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" placeholder="Enter product name" required>
+
+            <label for="productDescription">Product Description:</label>
+            <textarea id="productDescription" placeholder="Enter product description"></textarea>
+
+            <label for="productImageUrl">Product Image URL:</label>
+            <input type="text" id="productImageUrl" placeholder="Enter product image URL">
+
+            <label for="productRating">Product Rating:</label>
+            <input type="number" step="0.1" id="productRating" placeholder="Enter product rating">
+
+            <button type="submit">Add Team</button>
+        </form>
+    </div>
+
+    <h2>Teams</h2>
+    <div id="teamList"></div>
+
     <h1>Add a Buyer</h1>
-    {% comment %} <div class="form-container">
+    <div class="form-container">
         <form id="buyerForm">
             <label for="name">Name:</label>
             <input type="text" id="name" placeholder="Enter name" required>
@@ -22,7 +47,7 @@
 
             <button type="submit">Add Buyer</button>
         </form>
-    </div> {% endcomment %}
+    </div>
 
     <div class="buyer-container" id="buyerDetails">
         <h2>Current Buyer Details</h2>
@@ -60,6 +85,90 @@
     </div>
 
     <script>
+        document.getElementById('teamForm').addEventListener('submit', function (e) {
+            e.preventDefault()
+            const teamName = document.getElementById('teamName').value
+            const productName = document.getElementById('productName').value
+            const productDescription = document.getElementById('productDescription').value
+            const productImageUrl = document.getElementById('productImageUrl').value
+            const productRating = parseFloat(document.getElementById('productRating').value)
+
+            const newTeam = {
+                teamName,
+                totalRevenue: 0,
+                product: {
+                    name: productName,
+                    description: productDescription,
+                    imageUrl: productImageUrl,
+                    rating: productRating,
+                }
+            };
+
+            fetch('/api/add-team', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newTeam)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Team added successfully!')
+                    displayTeams([data.team])
+                } else {
+                    alert('Error: ' + data.message)
+                }
+            })
+            .catch(error => alert('CATCH Error: ' + error))
+        })
+
+        function displayTeams(teams) {
+            const teamList = document.getElementById('teamList')
+            teams.forEach(team => {
+                const teamElement = document.createElement('div')
+                teamElement.className = 'team-item'
+                teamElement.innerHTML = `
+                    <h2>${team.teamName}</h2>
+                    <p><strong>Total Revenue:</strong> ${team.totalRevenue}</p>
+                    <p><strong>Product Name:</strong> ${team.product.name}</p>
+                    <p><strong>Product Rating:</strong> <span id="rating-${team._id}">${team.product.rating}</span></p>
+                    <label for="editRating-${team._id}">Edit Rating:</label>
+                    <input type="number" step="0.1" id="editRating-${team._id}" placeholder="New rating">
+                    <button onclick="updateRating('${team._id}')">Update Rating</button>
+                    <p><strong>Description:</strong> ${team.product.description}</p>
+                    <img src="${team.product.imageUrl}" alt="${team.product.name}">
+                `
+                teamList.appendChild(teamElement)
+            })
+        }
+
+        function updateRating(teamId) {
+            const newRating = parseFloat(document.getElementById(`editRating-${teamId}`).value)
+
+            if (isNaN(newRating) || newRating < 0) {
+                alert("Please enter a valid rating")
+                return
+            }
+
+            fetch(`/api/edit-rating/${teamId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rating: newRating })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Rating updated successfully!')
+                    document.getElementById(`rating-${teamId}`).textContent = newRating
+                } else {
+                    alert('Error: ' + data.message)
+                }
+            })
+            .catch(error => alert('CATCH Error: ' + error))
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             let buyers = []
@@ -73,6 +182,7 @@
             .then(data => {
                 if (data.success) {
                     buyers = data.buyers
+                    displayTeams(data.teams)
                     console.log(buyers)
                     const topBuyers = computeTopBuyers(buyers)
                     displayTopBuyers(topBuyers)
@@ -93,7 +203,7 @@
             const newBuyer = {
                 name: name.toLowerCase(),
                 pin: pin,
-                tokens: 200,
+                tokens: 150,
                 cart: [],
                 id: 'buyer' + Math.floor(Math.random() * 1000)
             }

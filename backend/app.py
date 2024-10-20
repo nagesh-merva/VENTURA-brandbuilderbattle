@@ -19,14 +19,72 @@ def index():
     buyers = list(buyers_collection.find())
     
     return render_template('index.html', buyers=buyers)
+
+@app.route('/api/add-team', methods=['POST'])
+def add_team():
+    team_data = request.json
+    try:
+        new_team = {
+            "teamName": team_data["teamName"],
+            "totalRevenue": team_data["totalRevenue"],
+            "product": {
+                "name": team_data["product"]["name"],
+                "description": team_data["product"]["description"],
+                "imageUrl": team_data["product"]["imageUrl"],
+                "rating": team_data["product"]["rating"]
+            }
+        }
+        result =teams_collection.insert_one(new_team)
+        
+        new_team["_id"] = str(result.inserted_id)
+        
+        return jsonify({"success": True, "team": new_team}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route('/api/edit-rating/<team_id>', methods=['PATCH'])
+def edit_rating(team_id):
+    try:
+        new_rating = request.json.get("rating")
+        if new_rating is None:
+            return jsonify({"success": False, "message": "Rating is required"}), 400
+        
+        result = teams_collection.update_one(
+            {"_id": ObjectId(team_id)},
+            {"$set": {"product.rating": new_rating}}
+        )
+
+        if result.matched_count == 0:
+            return jsonify({"success": False, "message": "Team not found"}), 404
+        
+        return jsonify({"success": True, "message": "Rating updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
         
 @app.route('/api/getbuyers', methods=['GET'])
 def getbuyer():
     buyers = list(buyers_collection.find())
+    teams = list(teams_collection.find())
+    
+    teams = [{**team, "_id": str(team["_id"])} for team in teams]
+
     for buyer in buyers:
         buyer['_id'] = str(buyer['_id'])
+        
+        if 'cart' in buyer:
+            for cart_item in buyer['cart']:
+                product_name = cart_item['product']['name']
+                product = teams_collection.find_one({"product.name": product_name})
+                
+                if product and 'rating' in product['product']:
+                    cart_item['product']['rating'] = product['product']['rating']
+                else:
+                    cart_item['product']['rating'] = None
     
-    return jsonify({"success": True, 'buyers' : buyers}), 200
+    return jsonify({"success": True, 'buyers': buyers, 'teams':teams }), 200
+
     
 @app.route('/api/add-buyer', methods=['POST'])
 def add_buyer():
